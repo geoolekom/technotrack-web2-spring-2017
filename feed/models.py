@@ -1,13 +1,15 @@
 from django.db import models
-from core.models import Authored
+from core.models import Authored, Dated
 
 
-class Post(models.Model, Authored):
+class Post(models.Model, Authored, Dated):
 	title = models.CharField(verbose_name='Заголовок', max_length=200)
 	content = models.TextField(verbose_name=u'Текст поста')
 	rating = models.IntegerField('Рейтинг', default=0)
 
-	pub_time = models.DateTimeField('Время публикации', auto_now_add=True)
-	upd_time = models.DateTimeField('Последнее изменение', auto_now=True)
+	class Meta:
+		verbose_name = 'Пост'
+		verbose_name_plural = 'Посты'
+
 
 
