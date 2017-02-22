@@ -43,6 +43,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'debug_toolbar',
     'core.apps.CoreConfig',
+    'chats.apps.ChatsConfig',
+    'feed.apps.FeedConfig',
+    'relations.apps.RelationsConfig',
+    'likes.apps.LikesConfig',
+    'comments.apps.CommentsConfig'
 ]
 
 MIDDLEWARE = [
@@ -86,11 +91,12 @@ WSGI_APPLICATION = 'application.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': config.get('db', 'NAME'),
         'USER': config.get('db', 'USER'),
         'PASSWORD': config.get('db', 'PASSWORD'),
-        'HOST': 'localhost',
+        'HOST': config.get('db', 'HOST'),
+        'PORT': config.get('db', 'PORT'),
     }
 }
 

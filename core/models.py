@@ -2,10 +2,16 @@ from __future__ import unicode_literals
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 
 class Authored(models.Model):
-	author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='Автор')
+	author = models.ForeignKey(
+		settings.AUTH_USER_MODEL,
+		verbose_name='Автор',
+		related_name='+'
+	)
 
 	class Meta:
 		abstract = True
@@ -14,6 +20,29 @@ class Authored(models.Model):
 class Dated(models.Model):
 	pub_time = models.DateTimeField(verbose_name='Время публикации', auto_now_add=True)
 	upd_time = models.DateTimeField(verbose_name='Последнее изменение', auto_now=True)
+
+	class Meta:
+		abstract = True
+
+
+class Titled(models.Model):
+	title = models.CharField(verbose_name='Название', max_length=128, blank=True, null=True)
+
+	class Meta:
+		abstract = True
+
+
+class BoundAble(models.Model):
+	target = GenericForeignKey('target_content_type', 'target_id')
+	target_content_type = models.ForeignKey(ContentType)
+	target_id = models.PositiveIntegerField()
+
+	class Meta:
+		abstract = True
+
+
+class Deletable(models.Model):
+	deleted = models.BooleanField(verbose_name='Удален?', default=False)
 
 	class Meta:
 		abstract = True
