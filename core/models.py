@@ -1,8 +1,7 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.conf import settings
-from django.contrib.auth.models import AbstractUser
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 
 
@@ -32,15 +31,6 @@ class Titled(models.Model):
 		abstract = True
 
 
-class BoundAble(models.Model):
-	target = GenericForeignKey('target_content_type', 'target_id')
-	target_content_type = models.ForeignKey(ContentType)
-	target_id = models.PositiveIntegerField()
-
-	class Meta:
-		abstract = True
-
-
 class Deletable(models.Model):
 	deleted = models.BooleanField(verbose_name='Удален?', default=False)
 
@@ -48,5 +38,17 @@ class Deletable(models.Model):
 		abstract = True
 
 
-class User(AbstractUser, Dated):
-	pass
+class BoundAble(models.Model):
+	target = GenericForeignKey('target_content_type', 'target_id')
+	target_content_type = models.ForeignKey(ContentType)
+	target_id = models.PositiveIntegerField()
+
+	@staticmethod
+	def get_relation(model):
+		if issubclass(model, BoundAble):
+			return GenericRelation(model, content_type_field='target_content_type', object_id_field='target_id')
+		else:
+			return None
+
+	class Meta:
+		abstract = True

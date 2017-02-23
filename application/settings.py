@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
+    'accounts.apps.AccountsConfig',
     'core.apps.CoreConfig',
     'chats.apps.ChatsConfig',
     'feed.apps.FeedConfig',
@@ -62,8 +63,6 @@ MIDDLEWARE = [
 ]
 
 INTERNAL_IPS = '127.0.0.1',
-
-AUTH_USER_MODEL = 'core.User'
 
 ROOT_URLCONF = 'application.urls'
 
@@ -123,7 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 
@@ -137,4 +136,5 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
+AUTH_USER_MODEL = 'accounts.User'
 STATIC_URL = '/static/'
