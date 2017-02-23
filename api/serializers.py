@@ -29,14 +29,15 @@ class ChatSummarySerializer(serializers.ModelSerializer):
 			result = super(ChatSummarySerializer, self).to_representation(instance)
 			return result
 		except Message.DoesNotExist:
-			result = collections.OrderedDict(model_to_dict(instance, exclude=['participants', 'author']))
-			result.update({
-				'last_message': None,
-				'author': {
+			result = collections.OrderedDict([
+				('id', instance.id),
+				('title', instance.title),
+				('author', {
 					'id': instance.author.id,
 					'username': instance.author.username
-				},
-			})
+				}),
+				('last_message', None)
+			])
 			return result
 
 	class Meta:

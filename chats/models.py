@@ -6,11 +6,6 @@ from django.conf import settings
 class Chat(Authored, Dated, Titled):
 	participants = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name='Участники')
 
-	def save(self, *args, **kwargs):
-		chat = super(Chat, self).save(*args, **kwargs)
-		self.participants.add(self.author)
-		return chat
-
 	class Meta:
 		verbose_name = 'Чат'
 		verbose_name_plural = 'Чаты'
