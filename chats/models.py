@@ -1,8 +1,11 @@
 from django.db import models
 from core.models import Authored, Dated
+from django.conf import settings
 
 
 class Chat(Authored, Dated):
+	participants = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name='Участники')
+
 	class Meta:
 		verbose_name = 'Чат'
 		verbose_name_plural = 'Чаты'

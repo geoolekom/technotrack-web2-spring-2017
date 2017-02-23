@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'accounts.apps.AccountsConfig',
     'core.apps.CoreConfig',
+    'notifications.apps.NotificationsConfig',
     'chats.apps.ChatsConfig',
     'feed.apps.FeedConfig',
     'relations.apps.RelationsConfig',
