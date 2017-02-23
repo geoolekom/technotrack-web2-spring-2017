@@ -1,10 +1,15 @@
 from django.db import models
-from core.models import Authored, Dated
+from core.models import Authored, Dated, Titled
 from django.conf import settings
 
 
-class Chat(Authored, Dated):
+class Chat(Authored, Dated, Titled):
 	participants = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name='Участники')
+
+	def save(self, *args, **kwargs):
+		chat = super(Chat, self).save(*args, **kwargs)
+		self.participants.add(self.author)
+		return chat
 
 	class Meta:
 		verbose_name = 'Чат'
@@ -18,4 +23,5 @@ class Message(Authored, Dated):
 	class Meta:
 		verbose_name = 'Сообщение'
 		verbose_name_plural = 'Сообщения'
+		get_latest_by = 'pub_time'
 

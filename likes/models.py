@@ -1,13 +1,14 @@
 from django.db import models
-from core.models import Authored, BoundAble
+from core.models import Authored, Dated, BoundAble
 
 
-class Like(Authored, BoundAble):
+class Like(Authored, Dated, BoundAble):
 
 	def save(self, *args, **kwargs):
 		if Like.objects.filter(
 			author_id=self.author_id,
-			target=self.target
+			target_content_type_id=self.target_content_type_id,
+			target_id=self.target_id
 		):
 			raise ValueError('Лайк этого автора уже стоит на этом объекте!')
 		else:
