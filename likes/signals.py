@@ -4,12 +4,7 @@ from notifications.models import Notification
 
 
 def check_if_unique(instance, *args, **kwargs):
-	same_like_exists = Like.objects.filter(
-		author_id=instance.author_id,
-		target_content_type_id=instance.target_content_type_id,
-		target_id=instance.target_id
-	).exists()
-	if same_like_exists or bool(instance.pk):
+	if instance.pk:
 		raise ValueError('Переиспользование лайков в другом месте запрещено.')
 
 
