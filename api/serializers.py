@@ -2,8 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from chats.models import Chat, Message
 from notifications.models import Notification
-from django.forms.models import model_to_dict
-import collections
+from django.db.models import Max
 
 
 class UserSummarySerializer(serializers.ModelSerializer):
@@ -22,23 +21,14 @@ class MessageSerializer(serializers.ModelSerializer):
 
 class ChatSummarySerializer(serializers.ModelSerializer):
 	author = UserSummarySerializer(read_only=True)
-	last_message = MessageSerializer(source='message_set.latest', read_only=True, required=False)
 
-	def to_representation(self, instance):
+	def get_last_message(self, object):
 		try:
-			result = super(ChatSummarySerializer, self).to_representation(instance)
-			return result
+			return MessageSerializer(instance=object.message_set.latest(), read_only=True).data
 		except Message.DoesNotExist:
-			result = collections.OrderedDict([
-				('id', instance.id),
-				('title', instance.title),
-				('author', {
-					'id': instance.author.id,
-					'username': instance.author.username
-				}),
-				('last_message', None)
-			])
-			return result
+			return None
+
+	last_message = serializers.SerializerMethodField()
 
 	class Meta:
 		model = Chat
