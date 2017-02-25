@@ -10,6 +10,7 @@ class FriendshipRequest(Authored):
 	class Meta:
 		verbose_name = 'Запрос в друзья'
 		verbose_name_plural = 'Запросы в друзья'
+		unique_together = (('author', 'target'),)
 
 
 class Friendship(models.Model):
@@ -27,3 +28,4 @@ class Friendship(models.Model):
 	class Meta:
 		verbose_name = 'Запись о дружбе'
 		verbose_name_plural = 'Записи о дружбе'
+		unique_together = (('person', 'friend'), )

@@ -2,7 +2,6 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from chats.models import Chat, Message
 from notifications.models import Notification
-from django.db.models import Max
 
 
 class UserSummarySerializer(serializers.ModelSerializer):

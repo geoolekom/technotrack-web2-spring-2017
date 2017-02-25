@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'feed.apps.FeedConfig',
     'relations.apps.RelationsConfig',
     'likes.apps.LikesConfig',
-    'comments.apps.CommentsConfig'
+    'achievements.apps.AchievementsConfig',
+    'comments.apps.CommentsConfig',
 ]
 
 MIDDLEWARE = [

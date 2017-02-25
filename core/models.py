@@ -16,6 +16,17 @@ class Authored(models.Model):
 		abstract = True
 
 
+class Consumed(models.Model):
+	consumer = models.ForeignKey(
+		settings.AUTH_USER_MODEL,
+		verbose_name='Потребитель',
+		related_name='+'
+	)
+
+	class Meta:
+		abstract = True
+
+
 class Dated(models.Model):
 	pub_time = models.DateTimeField(verbose_name='Время публикации', auto_now_add=True)
 	upd_time = models.DateTimeField(verbose_name='Последнее изменение', auto_now=True)
