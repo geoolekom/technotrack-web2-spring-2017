@@ -1,14 +1,19 @@
-from django.db.models import signals
+from django.db.models import signals, Q
+from django.dispatch import receiver
+
 from notifications.models import Notification
 from achievements.models import Achievement, friendship
 from relations.models import FriendshipRequest, Friendship
 
 
+@receiver(signals.post_save, sender=FriendshipRequest)
 def add_friendship_if_accepted(instance, created=False, *args, **kwargs):
 	if instance.accepted:
 		Friendship.objects.create(person=instance.author, friend=instance.target)
+		Friendship.objects.create(person=instance.target, friend=instance.author)
 
 
+@receiver(signals.post_save, sender=FriendshipRequest)
 def note_on_friendship_request(instance, created=False, *args, **kwargs):
 	if created:
 		Notification.objects.create(
@@ -17,15 +22,22 @@ def note_on_friendship_request(instance, created=False, *args, **kwargs):
 		)
 
 
+@receiver(signals.post_save, sender=Friendship)
 def achieve_on_friendship(instance, created=False, *args, **kwargs):
 	num = Friendship.objects.filter(person=instance.person).count()
 	if num in friendship.keys():
-		Achievement.objects.create(
+		Achievement.objects.update_or_create(
 			author=instance.person,
 			title=friendship[num],
-			content='У вас {0} друзей!'.format(num)
+			defaults={
+				'content': 'У вас {0} друзей!'.format(num)
+			}
 		)
 
-signals.post_save.connect(note_on_friendship_request, sender=FriendshipRequest)
-signals.post_save.connect(add_friendship_if_accepted, sender=FriendshipRequest)
-signals.post_save.connect(achieve_on_friendship, sender=Friendship)
+
+@receiver(signals.post_delete, sender=Friendship)
+def delete_on_friendship_delete(instance, *args, **kwargs):
+	Friendship.objects.filter(person=instance.friend, friend=instance.person).delete()
+	FriendshipRequest.objects\
+		.filter(Q(author=instance.person, target=instance.friend) | Q(author=instance.friend, target=instance.person))\
+		.delete()

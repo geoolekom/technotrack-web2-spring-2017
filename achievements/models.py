@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+
 from core.models import Authored, Titled
 
 friendship = {
@@ -36,6 +38,9 @@ class Achievement(Authored, Titled):
 		verbose_name = 'Достижение'
 		verbose_name_plural = 'Достижения'
 		unique_together = (('author', 'title'), )
+
+	def __str__(self):
+		return '{0}: достижение {1}'.format(self.author, self.title)
 
 
 

@@ -1,8 +1,15 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+
 from core.models import Authored, Dated, BoundAble
 
 
 class Like(Authored, Dated, BoundAble):
+
+	def clean(self):
+		if self.pk:
+			raise ValidationError('Нельзя изменять существующие лайки!')
+		return super(Like, self).clean()
 
 	class Meta:
 		verbose_name = 'Лайк'

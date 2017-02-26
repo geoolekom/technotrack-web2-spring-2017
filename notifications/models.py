@@ -8,3 +8,6 @@ class Notification(Consumed, Dated, Deletable):
 	class Meta:
 		verbose_name = 'Уведомление'
 		verbose_name_plural = 'Уведомления'
+
+	def __str__(self):
+		return 'уведомление "{0}: {1}"'.format(self.consumer.username, self.content)

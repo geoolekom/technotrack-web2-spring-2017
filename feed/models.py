@@ -11,9 +11,15 @@ class Post(Authored, Dated, Titled, Deletable, LikeAble, CommentAble):
 		verbose_name = 'Пост'
 		verbose_name_plural = 'Посты'
 
+	def __str__(self):
+		return 'пост "{0}: {1}"'.format(self.author.username, self.title)
+
 
 class FeedElement(Consumed, BoundAble, Dated):
 
 	class Meta:
 		verbose_name = 'Запись в ленте'
 		verbose_name_plural = 'Записи в ленте'
+
+	def __str__(self):
+		return "Лента {0}: {1}".format(self.consumer, str(self.target))
