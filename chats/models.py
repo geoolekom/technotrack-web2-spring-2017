@@ -10,6 +10,9 @@ class Chat(Authored, Dated, Titled):
 		verbose_name = 'Чат'
 		verbose_name_plural = 'Чаты'
 
+	def __str__(self):
+		return self.title
+
 
 class Message(Authored, Dated):
 	chat = models.ForeignKey(Chat, verbose_name='Чат')
@@ -19,4 +22,7 @@ class Message(Authored, Dated):
 		verbose_name = 'Сообщение'
 		verbose_name_plural = 'Сообщения'
 		get_latest_by = 'pub_time'
+
+	def __str__(self):
+		return '{0}, {1}: {2}'.format(self.chat_id, self.author, self.content)
 

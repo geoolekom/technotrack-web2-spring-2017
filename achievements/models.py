@@ -1,7 +1,7 @@
 from django.db import models
-from django.core.exceptions import ValidationError
 
 from core.models import Authored, Titled
+from core.decorators import non_editable_fields
 
 friendship = {
 	1: 'Первый друг',
@@ -31,6 +31,7 @@ comments = {
 }
 
 
+@non_editable_fields('author_id')
 class Achievement(Authored, Titled):
 	content = models.TextField(verbose_name='Содержание')
 
