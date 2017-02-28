@@ -15,9 +15,9 @@ class TestComments(TestCase):
 		Comment.objects.create(author=self.user, target=self.post)
 		assert self.user.notification_set.count() == 0
 
-	def testOtherCommentNotifications(self):
+	def testOtherCommentNotificationsAndAchievements(self):
 		Comment.objects.create(author=self.other, target=self.post)
-		assert self.user.notification_set.count() == 1
+		assert self.user.notification_set.count() == 2
 
 	def tearDown(self):
 		self.user.delete()

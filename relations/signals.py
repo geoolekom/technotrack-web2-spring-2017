@@ -10,7 +10,6 @@ from relations.models import FriendshipRequest, Friendship
 def add_friendship_if_accepted(instance, created=False, *args, **kwargs):
 	if instance.accepted:
 		Friendship.objects.create(person=instance.author, friend=instance.target)
-		Friendship.objects.create(person=instance.target, friend=instance.author)
 
 
 @receiver(signals.post_save, sender=FriendshipRequest)
@@ -20,6 +19,11 @@ def note_on_friendship_request(instance, created=False, *args, **kwargs):
 			consumer=instance.target,
 			content='{0} хочет с вами подружиться'.format(instance.author.username)
 		)
+
+
+@receiver(signals.post_save, sender=Friendship)
+def duplicate_friendship(instance, created=False, *args, **kwargs):
+	Friendship.objects.get_or_create(person=instance.friend, friend=instance.person)
 
 
 @receiver(signals.post_save, sender=Friendship)

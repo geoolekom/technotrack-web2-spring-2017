@@ -25,12 +25,12 @@ class Friendship(models.Model):
 	person = models.ForeignKey(
 		settings.AUTH_USER_MODEL,
 		verbose_name='Пользователь',
-		related_name='+'
+		related_name='friends'
 	)
 	friend = models.ForeignKey(
 		settings.AUTH_USER_MODEL,
 		verbose_name='Друг',
-		related_name='friends'
+		related_name='+'
 	)
 
 	class Meta:

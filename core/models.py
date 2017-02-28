@@ -10,7 +10,7 @@ class Authored(models.Model):
 	author = models.ForeignKey(
 		settings.AUTH_USER_MODEL,
 		verbose_name='Автор',
-		related_name='+'
+		related_name='%(class)s_authored'
 	)
 
 	class Meta:
@@ -20,8 +20,7 @@ class Authored(models.Model):
 class Consumed(models.Model):
 	consumer = models.ForeignKey(
 		settings.AUTH_USER_MODEL,
-		verbose_name='Потребитель',
-		related_name='+'
+		verbose_name='Потребитель'
 	)
 
 	class Meta:

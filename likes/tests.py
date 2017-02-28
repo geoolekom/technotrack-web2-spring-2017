@@ -1,7 +1,9 @@
 from django.test import TestCase
+from django.contrib.auth import get_user_model, hashers
+from django.core.exceptions import ValidationError
+
 from likes.models import Like
 from feed.models import Post
-from django.contrib.auth import get_user_model, hashers
 
 
 class TestLikes(TestCase):
@@ -12,17 +14,23 @@ class TestLikes(TestCase):
 		self.post = Post.objects.create(title='title', content='content', author=self.user)
 
 	def testLikeImmutability(self):
-		with self.assertRaises(ValueError):
+		with self.assertRaises(ValidationError):
 			like = Like.objects.create(author=self.user, target=self.post)
-			like.save()
+			like.author = self.other
+			like.clean()
 
 	def testSelfLikeNotifications(self):
 		Like.objects.create(author=self.user, target=self.post)
 		assert self.user.notification_set.count() == 0
 
-	def testOtherLikeNotifications(self):
+	def testOtherLikeNotificationsAndAchievements(self):
 		Like.objects.create(author=self.other, target=self.post)
-		assert self.user.notification_set.count() == 1
+		assert self.user.notification_set.count() == 2
+
+	def testLikeDeleteNotification(self):
+		Like.objects.create(author=self.other, target=self.post)
+		Like.objects.get().delete()
+		assert self.user.notification_set.count() == 3
 
 	def tearDown(self):
 		self.user.delete()
