@@ -4,7 +4,7 @@ from django.conf import settings
 
 
 class Chat(Authored, Dated, Titled):
-	participants = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name='Участники')
+	participants = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name='Участники', blank=True)
 
 	class Meta:
 		verbose_name = 'Чат'

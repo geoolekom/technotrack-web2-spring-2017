@@ -17,9 +17,11 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
 
+from api.routers import router
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^api/', include('api.urls', namespace='api')),
+    url(r'^api/v1/', include(router.urls, namespace='api')),
 ]
 
 if settings.DEBUG:
