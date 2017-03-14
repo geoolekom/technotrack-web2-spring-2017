@@ -2,11 +2,17 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 from rest_framework import viewsets
 
-from api.permissions import IsChatParticipantOrAuthor, IsAuthor, IsAuthorOrReadOnly
-from api.serializers import UserSerializer, ChatSerializer, MessageSerializer, CommentSerializer
+from api.permissions import IsChatParticipantOrAuthor, IsAuthor, IsAuthorOrReadOnly, IsAdminOrReadOnly, IsConsumer
+from api.serializers import UserSerializer, \
+	ChatSerializer, MessageSerializer, \
+	CommentSerializer, PostSerializer, \
+	AchievementSerializer, NotificationSerializer
 
 from chats.models import Chat, Message
 from comments.models import Comment
+from feed.models import Post
+from achievements.models import Achievement
+from notifications.models import Notification
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -41,6 +47,27 @@ class MessageViewSet(viewsets.ModelViewSet):
 		serializer.save(author=self.request.user)
 
 
+class NotificationViewSet(viewsets.ModelViewSet):
+	queryset = Notification.objects.all()
+	serializer_class = NotificationSerializer
+	permission_classes = IsConsumer,
+
+	def get_queryset(self):
+		return self.queryset.filter(consumer_id=self.request.user.id).prefetch_related('consumer')
+
+
+class PostViewSet(viewsets.ModelViewSet):
+	queryset = Post.objects.all()
+	serializer_class = PostSerializer
+	permission_classes = IsAuthorOrReadOnly,
+
+	def get_queryset(self):
+		return self.queryset.prefetch_related('author')
+
+	def perform_create(self, serializer):
+		serializer.save(author=self.request.user)
+
+
 class CommentViewSet(viewsets.ModelViewSet):
 	queryset = Comment.objects.all()
 	serializer_class = CommentSerializer
@@ -51,4 +78,14 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 	def perform_create(self, serializer):
 		serializer.save(author=self.request.user)
+
+
+class AchievementViewSet(viewsets.ModelViewSet):
+	queryset = Achievement.objects.all()
+	serializer_class = AchievementSerializer
+	permission_classes = IsAdminOrReadOnly,
+
+	def get_queryset(self):
+		return self.queryset.prefetch_related('author')
+
 

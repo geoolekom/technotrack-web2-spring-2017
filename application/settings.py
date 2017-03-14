@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
+    'social_django',
     'rest_framework',
     'accounts.apps.AccountsConfig',
     'core.apps.CoreConfig',
@@ -52,6 +53,15 @@ INSTALLED_APPS = [
     'likes.apps.LikesConfig',
     'achievements.apps.AchievementsConfig',
     'comments.apps.CommentsConfig',
+]
+
+SOCIAL_AUTH_VK_OAUTH2_KEY = config.get('vk', 'KEY')
+SOCIAL_AUTH_VK_OAUTH2_SECRET = config.get('vk', 'SECRET')
+SOCIAL_AUTH_VK_SCOPE = ['email', 'password']
+
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.vk.VKOAuth2',
+    'django.contrib.auth.backends.ModelBackend'
 ]
 
 MIDDLEWARE = [

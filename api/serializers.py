@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from chats.models import Chat, Message
 from comments.models import Comment
 from notifications.models import Notification
+from achievements.models import Achievement
 
 
 class UserSummarySerializer(serializers.ModelSerializer):
@@ -31,11 +32,11 @@ class ChatSerializer(serializers.ModelSerializer):
 
 
 class NotificationSerializer(serializers.ModelSerializer):
-	receiver = UserSummarySerializer(read_only=True)
+	consumer = UserSummarySerializer(read_only=True)
 
 	class Meta:
 		model = Notification
-		fields = ('id', 'receiver', 'content', )
+		fields = ('id', 'consumer', 'content', )
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -47,10 +48,27 @@ class UserSerializer(serializers.ModelSerializer):
 		fields = ('id', 'username', 'email', 'first_name', 'last_name', 'chat_set', 'notification_set', )
 
 
-class CommentSerializer(serializers.ModelSerializer):
-
+class PostSerializer(serializers.ModelSerializer):
 	author = UserSummarySerializer(read_only=True)
+	like_count = serializers.ReadOnlyField(source='likes.count')
 
 	class Meta:
 		model = Comment
-		fields = ('id', 'author', 'content', )
+		fields = ('id', 'author', 'content', 'like_count', )
+
+
+class CommentSerializer(serializers.ModelSerializer):
+	author = UserSummarySerializer(read_only=True)
+	like_count = serializers.ReadOnlyField(source='likes.count')
+
+	class Meta:
+		model = Comment
+		fields = ('id', 'author', 'content', 'like_count', )
+
+
+class AchievementSerializer(serializers.ModelSerializer):
+	author = UserSummarySerializer(read_only=True)
+
+	class Meta:
+		model = Achievement
+		fields = ('id', 'author', 'title', 'content', )

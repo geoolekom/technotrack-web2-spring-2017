@@ -22,6 +22,8 @@ from api.routers import router
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/v1/', include(router.urls, namespace='api')),
+    url(r'^accounts/', include('accounts.urls', namespace='accounts')),
+    url(r'^social/', include('social_django.urls', namespace='social')),
 ]
 
 if settings.DEBUG:
