@@ -3,7 +3,7 @@ from django.db.models import Q
 from rest_framework import viewsets
 
 from api.permissions import IsChatParticipantOrAuthor, IsAuthor, IsAuthorOrReadOnly, IsAdminOrReadOnly, IsConsumer
-from api.serializers import UserSerializer, \
+from api.serializers import UserSerializer, LikeSerializer, \
 	ChatSerializer, MessageSerializer, \
 	CommentSerializer, PostSerializer, \
 	AchievementSerializer, NotificationSerializer
@@ -13,6 +13,7 @@ from comments.models import Comment
 from feed.models import Post
 from achievements.models import Achievement
 from notifications.models import Notification
+from likes.models import Like
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -87,5 +88,12 @@ class AchievementViewSet(viewsets.ModelViewSet):
 
 	def get_queryset(self):
 		return self.queryset.prefetch_related('author')
+
+
+class LikeViewSet(viewsets.ModelViewSet):
+	queryset = Like.objects.all()
+	serializer_class = LikeSerializer
+	permission_classes = IsAuthorOrReadOnly,
+
 
 

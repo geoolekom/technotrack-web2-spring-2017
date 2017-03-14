@@ -28,7 +28,7 @@ class ChatSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Chat
-		fields = ('id', 'author', 'title', 'participants', 'message_set',)
+		fields = ('id', 'author', 'title', 'participants', )
 
 
 class NotificationSerializer(serializers.ModelSerializer):
@@ -45,7 +45,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = get_user_model()
-		fields = ('id', 'username', 'email', 'first_name', 'last_name', 'chat_set', 'notification_set', )
+		fields = ('id', 'username', 'email', 'first_name', 'last_name', )
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -63,7 +63,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Comment
-		fields = ('id', 'author', 'content', 'like_count', )
+		fields = ('id', 'author', 'content', 'like_count', 'target_content_type', 'target_id', )
 
 
 class AchievementSerializer(serializers.ModelSerializer):
@@ -72,3 +72,11 @@ class AchievementSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Achievement
 		fields = ('id', 'author', 'title', 'content', )
+
+
+class LikeSerializer(serializers.ModelSerializer):
+	author = UserSummarySerializer(read_only=True)
+
+	class Meta:
+		model = Comment
+		fields = ('id', 'author', 'target_content_type', 'target_id',)
