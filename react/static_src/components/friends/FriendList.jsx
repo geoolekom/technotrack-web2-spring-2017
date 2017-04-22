@@ -1,16 +1,13 @@
 import React from 'react';
 import $ from 'jquery';
-import Friend from "./Friend";
 import { ListGroupItem, ListGroup } from "react-bootstrap";
 
-const friends_url = 'http://socnet.local/api/v1/friendships.json';
-const requests_url = 'http://socnet.local/api/v1/friendship_requests';
-const users_url = 'http://socnet.local/api/v1/users';
+import storage from '../Storage'
 
 class FriendList extends React.Component {
 
     state = {
-        friendships: [],
+        friends: [],
         requests: [],
         isLoading: true
     };
@@ -21,62 +18,27 @@ class FriendList extends React.Component {
         } else {
             return <ListGroup>
                 { this.state.requests }
-                { this.state.friendships }
+                { this.state.friends }
             </ListGroup>
         }
     }
 
-    componentDidMount() {
-        let users = [];
-        let friendships = [];
+    componentDidMount = () => {
 
-        $.ajax({
-            method: 'get',
-            url: users_url,
-        }).done((response) => {
-            users = response.reduce((dict, obj) => {
-                dict[obj.id] = obj;
-                return dict;
-            }, {});
-
-            $.ajax({
-                method: 'get',
-                url: friends_url,
-            }).done((response) => {
-                friendships = response.map(
-                    elem => <Friend key={ elem.id } name={ users[elem.friend].username } status="friend" />
-                );
-
-                this.setState({
-                    friendships: friendships,
-                    isLoading: false
-                });
-            }).fail((response) => {
-                console.log('Не удалось загрузить друзей: ', response);
+        storage.getData('friends');
+        $(storage).on('friends_ready', () => {
+            this.setState({
+                friends: storage.data.friends,
+                isLoading: false
             });
+        });
 
-            let requests = [];
-
-            $.ajax({
-                method: 'get',
-                url: requests_url,
-            }).done((response) => {
-                requests = response.reduce((arr, elem) => {
-                    if (!elem.accepted) {
-                        arr.push(<Friend key={ elem.id } name={ users[elem.target].username } status="incoming" />)
-                    }
-                    return arr
-                }, []);
-
-                this.setState({
-                    requests: requests
-                });
-
-            }).fail((response) => {
-                console.log('Не удалось загрузить запросы в друзья: ', response);
+        storage.getData('requests');
+        $(storage).on('requests_ready', () => {
+            console.log(storage);
+            this.setState({
+                requests: storage.data.requests
             });
-        }).fail((response) => {
-            console.log('Не удалось загрузить пользователей: ', response);
         });
     }
 

@@ -1,23 +1,7 @@
 import $ from 'jquery';
 import React from 'react';
 import Post from "./feed/Post";
-
-const requirements = {
-    users: [],
-    posts: ['users'],
-    friends: ['users'],
-    requests: ['users'],
-};
-
-const handlers = {
-    users: elem => ({
-        username: elem.username,
-        key: elem.id,
-    }),
-    posts: elem => (
-        <Post key={ elem.id } author={ storage['users'].find(x => x.key === elem.author) } title={ elem.title } content={ elem.content } likes={ elem.like_count } />
-    )
-};
+import Friend from "./friends/Friend";
 
 function api_request(entity, callback, method='get') {
     let url = 'http://socnet.local/api/v1/' + entity + '.json';
@@ -48,7 +32,15 @@ class Storage {
         }),
         posts: elem => (
             <Post key={ elem.id } author={ this.data.users.find(x => x.key === elem.author) } title={ elem.title } content={ elem.content } likes={ elem.like_count } />
-        )
+        ),
+        friends: elem => <Friend key={ elem.id } person={ this.data.users.find(x => x.key === elem.friend ) } status="friend" />,
+        requests: elem => {
+            if (!elem.accepted) {
+                return <Friend key={ elem.id } person={ this.data.users.find(x => x.key === elem.target) } status="outgoing" />
+            } else {
+                return null
+            }
+        }
     };
     requirements = {
         users: [],
@@ -74,11 +66,6 @@ class Storage {
                         storage.getData(r);
                     }
                 );
-
-                let a = () => {
-                    console.log(entity);
-                    $(storage).trigger('satisfied', [entity, response]);
-                }
             } else {
                 storage.data[entity] = response.map(storage.handlers[entity]);
                 $(storage).trigger(entity + '_ready');

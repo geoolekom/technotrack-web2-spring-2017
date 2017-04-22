@@ -9,15 +9,15 @@ const little_letters = {
 class Friend extends React.Component {
     render() {
         if (this.props.status === 'friend') {
-            return <ListGroupItem header={ this.props.name } style={ little_letters }>Друг</ListGroupItem>
+            return <ListGroupItem header={ this.props.person.username } style={ little_letters }>Друг</ListGroupItem>
         } else if (this.props.status === 'incoming') {
-            return <ListGroupItem bsStyle="info" header={ this.props.name } style={ little_letters }>
+            return <ListGroupItem bsStyle="info" header={ this.props.person.username } style={ little_letters }>
                 Входящая заявка<br/><br/>
                 <Button>Принять</Button>
                 <span><Button>Отказать</Button></span>
             </ListGroupItem>
         } else if (this.props.status === 'outgoing') {
-            return <ListGroupItem bsStyle="warning" header={ this.props.name } style={ little_letters }>
+            return <ListGroupItem bsStyle="warning" header={ this.props.person.username } style={ little_letters }>
                 Исходящая заявка<br/><br/>
                 <Button>Отменить</Button>
             </ListGroupItem>
@@ -26,7 +26,9 @@ class Friend extends React.Component {
 }
 
 Friend.propTypes = {
-    name: React.PropTypes.string.isRequired,
+    person: React.PropTypes.shape({
+        username: React.PropTypes.string.isRequired,
+    }),
     status: React.PropTypes.string.isRequired
 };
 
