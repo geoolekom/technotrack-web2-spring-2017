@@ -1,4 +1,11 @@
+# Python, Djangp
 *.pyc
-.idea
 */migrations/*
 
+# IDE
+.idea
+
+# React
+react/node_modules
+react/static
+core/static/react/

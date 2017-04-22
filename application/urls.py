@@ -24,11 +24,12 @@ urlpatterns = [
     url(r'^api/v1/', include(router.urls, namespace='api')),
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     url(r'^social/', include('social_django.urls', namespace='social')),
+    url(r'^', include('core.urls', namespace='core')),
 ]
 
 if settings.DEBUG:
     import debug_toolbar
+
     urlpatterns += [
         url(r'^__debug__/', include(debug_toolbar.urls)),
     ]
-

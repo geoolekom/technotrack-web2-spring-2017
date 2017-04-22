@@ -4,9 +4,9 @@ from achievements.models import Achievement
 
 @admin.register(Achievement)
 class AchievementAdmin(admin.ModelAdmin):
-	pass
+    pass
 
 
 class AchievementsInline(admin.TabularInline):
-	model = Achievement
-	extra = 0
+    model = Achievement
+    extra = 0

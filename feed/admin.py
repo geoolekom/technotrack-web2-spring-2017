@@ -6,9 +6,9 @@ from likes.admin import LikesInline
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-	inlines = CommentsInline, LikesInline,
+    inlines = CommentsInline, LikesInline,
 
 
 @admin.register(FeedElement)
 class FeedElementAdmin(admin.ModelAdmin):
-	pass
+    pass

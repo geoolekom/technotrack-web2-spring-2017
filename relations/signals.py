@@ -8,40 +8,40 @@ from relations.models import FriendshipRequest, Friendship
 
 @receiver(signals.post_save, sender=FriendshipRequest)
 def add_friendship_if_accepted(instance, created=False, *args, **kwargs):
-	if instance.accepted:
-		Friendship.objects.create(person=instance.author, friend=instance.target)
+    if instance.accepted:
+        Friendship.objects.create(person=instance.author, friend=instance.target)
 
 
 @receiver(signals.post_save, sender=FriendshipRequest)
 def note_on_friendship_request(instance, created=False, *args, **kwargs):
-	if created:
-		Notification.objects.create(
-			consumer=instance.target,
-			content='{0} хочет с вами подружиться'.format(instance.author.username)
-		)
+    if created:
+        Notification.objects.create(
+            consumer=instance.target,
+            content='{0} хочет с вами подружиться'.format(instance.author.username)
+        )
 
 
 @receiver(signals.post_save, sender=Friendship)
 def duplicate_friendship(instance, created=False, *args, **kwargs):
-	Friendship.objects.get_or_create(person=instance.friend, friend=instance.person)
+    Friendship.objects.get_or_create(person=instance.friend, friend=instance.person)
 
 
 @receiver(signals.post_save, sender=Friendship)
 def achieve_on_friendship(instance, created=False, *args, **kwargs):
-	num = Friendship.objects.filter(person=instance.person).count()
-	if num in friendship.keys():
-		Achievement.objects.update_or_create(
-			author=instance.person,
-			title=friendship[num],
-			defaults={
-				'content': 'У вас {0} друзей!'.format(num)
-			}
-		)
+    num = Friendship.objects.filter(person=instance.person).count()
+    if num in friendship.keys():
+        Achievement.objects.update_or_create(
+            author=instance.person,
+            title=friendship[num],
+            defaults={
+                'content': 'У вас {0} друзей!'.format(num)
+            }
+        )
 
 
 @receiver(signals.post_delete, sender=Friendship)
 def delete_on_friendship_delete(instance, *args, **kwargs):
-	Friendship.objects.filter(person=instance.friend, friend=instance.person).delete()
-	FriendshipRequest.objects\
-		.filter(Q(author=instance.person, target=instance.friend) | Q(author=instance.friend, target=instance.person))\
-		.delete()
+    Friendship.objects.filter(person=instance.friend, friend=instance.person).delete()
+    FriendshipRequest.objects \
+        .filter(Q(author=instance.person, target=instance.friend) | Q(author=instance.friend, target=instance.person)) \
+        .delete()

@@ -6,8 +6,8 @@ from likes.admin import LikesInline
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-	inlines = LikesInline,
+    inlines = LikesInline,
 
 
 class CommentsInline(BoundAbleAdmin):
-	model = Comment
+    model = Comment

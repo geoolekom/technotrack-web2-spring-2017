@@ -5,8 +5,8 @@ from core.admin import BoundAbleAdmin
 
 @admin.register(Like)
 class LikesAdmin(admin.ModelAdmin):
-	pass
+    pass
 
 
 class LikesInline(BoundAbleAdmin):
-	model = Like
+    model = Like

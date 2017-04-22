@@ -4,9 +4,9 @@ from notifications.models import Notification
 
 @admin.register(Notification)
 class NotificationAdmin(admin.ModelAdmin):
-	pass
+    pass
 
 
 class NotificationsInline(admin.TabularInline):
-	model = Notification
-	extra = 0
+    model = Notification
+    extra = 0
